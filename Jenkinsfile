@@ -22,9 +22,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 // url 부분의 콜론(:) 누락 수정 완료
-                deploy adapters: [tomcat9(credentialsId: 'tomcat', url: 'http://192.168.56.102:8080')], 
-                       contextPath: null, 
-                       war: 'target/hello-world.war'
+                deploy adapters: [tomcat9(credentialsId: 'tomcat', url: 'http://192.168.56.102:8080')], contextPath: null, war: 'target/hello-world.war'
             }
         }
     }
