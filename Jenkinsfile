@@ -1,27 +1,31 @@
 pipeline {
-  agent any
+    agent any
 
-  triggers {
-    pollSCM('* * * * *')
-  }
-}
+    triggers {
+        pollSCM('* * * * *')
+    }
 
-  stages {
-    stage('Checkout') {
-      steps {
-        git branch: 'main',
-        url: 'https://github.com/jihun0906/source-maven-java-spring-hello-webapp.git'
-      }
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/jihun0906/source-maven-java-spring-hello-webapp.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                // url 부분의 콜론(:) 누락 수정 완료
+                deploy adapters: [tomcat9(credentialsId: 'tomcat', url: 'http://192.168.56.102:8080')], 
+                       contextPath: null, 
+                       war: 'target/hello-world.war'
+            }
+        }
     }
-    stage('Build') {
-     steps {
-      sh 'mvn clean package'
-     }
-   }
-    stage('Deploy') {
-     steps {
-       deploy adapters: [tomcat9(credentialsId: 'tomcat', url: 'http//192.168.56.102:8080')], contextPath: null, war: 'target/hello-world.war'
-      }
-    }
-  }
-}
+} // pipeline 끝
