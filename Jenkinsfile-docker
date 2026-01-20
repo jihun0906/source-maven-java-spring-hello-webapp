@@ -13,31 +13,23 @@ pipeline {
         docker { image 'maven:3-openjdk-17' }
       }
       steps {
-        sh 'mvn clean package -DskipTests=true'
+        sh 'mvn clean package'
       }
     }
-    stage('Test') {
-      agent {
-        docker { image 'maven:3-openjdk-17' }
-      }
-      steps {
-        sh 'mvn test'
-      }
-    }
-    stage('Build Docker Image') {
+    stage('Build Image') {
       agent any
       steps {
-        sh 'docker image build -t webapp:hello-world .'
+        sh 'docker image build -t tomcat:hello-world .'
       }
     }
-    stage('Tag Docker Image') {
+    stage('ImageTag') {
       agent any
       steps {
-        sh 'docker image tag webapp:hello-world test1234/webapp:$BUILD_NUMBER'
-        sh 'docker image tag webapp:hello-world test1234/webapp:latest'
+        sh 'docker image tag tomecat:hello-world test1234/tomecat:$BUILDNUMBER'
+        sh 'docker image tag tomecat:hello-world test1234/tomcat:latest'
       }
     }
-    stage('Publish Docker Image') {
+    stage('ImagePush') {
       agent any
       steps {
         withDockerRegistry(credentialsId: 'docker-hub-token', url: 'https://index.docker.io/v1/') {
@@ -46,12 +38,12 @@ pipeline {
         }
       }
     }
-    stage('Run Docker Container') {
+    stage('Running Container') {
       agent {
         docker { image 'docker:dind' }
       }
       steps {
-        sh 'docker -H tcp://192.168.56.103:2375 container run --detach --name webapp -p 80:8080 test1234/webapp:$BUILD_NUMBER'
+        sh 'docker -H tcp://192.168.56.103:2375 container run --d --name webapp -p 80:8080 test1234/tomcat:$BUILD_NUMBER'
       }
     }
   }
