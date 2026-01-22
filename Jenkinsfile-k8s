@@ -63,7 +63,7 @@ spec:
         stage('Build & Push') {
             steps {
 	      container('kaniko') {
-		 'executor --context=dir://home/jenkins/agent/workspec/test/ --destination=jihunjeon/k8s:$BUILD_NUMBER --destination=jihunjeon/k8s:latest
+		 'executor --context=dir://home/jenkins/agent/workspec/test/ --destination=jihunjeon/k8s:$BUILD_NUMBER --destination=jihunjeon/k8s:latest'
             }
         }
     }
