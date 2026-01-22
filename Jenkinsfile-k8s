@@ -9,7 +9,7 @@ metadata:
 spec:
   containers:
     - name: myven
-      image: maven:3.8.6-openjdk-17
+      image: maven:3.8.5-openjdk-17
       command:
 	- slep
       args:
@@ -63,7 +63,7 @@ spec:
         stage('Build & Push') {
             steps {
 	      container('kaniko') {
-		 'executor --context=dir://home/jenkins/agent/workspec/test/ --destination=jihunjeon/k8s:$BUILD_NUMBER --destination=jihunjeon/k8s:latest'
+	       sh'executor --context=dir://home/jenkins/agent/workspec/test/ --destination=jihunjeon/k8s:$BUILD_NUMBER --destination=jihunjeon/k8s:latest'
             }
         }
     }
